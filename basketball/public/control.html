@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Scoreboard Control</title>
+  <link rel="stylesheet" href="led-font.css">
+  <style>
+    body {
+      background: #222;
+      color: #fff;
+      font-family: sans-serif;
+      padding: 15px;
+    }
+    .header.led {
+      font-size: 2em;
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    .section {
+      margin-bottom: 20px;
+      padding: 10px 10px 15px;
+      border: 1px solid #444;
+      border-radius: 6px;
+    }
+    .section h2 {
+      margin-bottom: 8px;
+      font-size: 1.2em;
+    }
+    input[type="text"],
+    input[type="password"],
+    input[type="number"],
+    input[type="file"] {
+      font-size: 1.1em;
+      padding: 8px;
+      margin: 5px 10px 5px 0;
+    }
+    button {
+      font-size: 1.1em;
+      padding: 10px 12px;
+      margin: 5px 10px 5px 0;
+      min-width: 60px;
+      border: none;
+      border-radius: 5px;
+      background: #0f0;
+      color: #000;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.1s;
+    }
+    button:active {
+      background: #0c0;
+      transform: scale(0.96);
+    }
+    button.clicked {
+      animation: clickFlash 0.3s ease;
+    }
+    @keyframes clickFlash {
+      0% { background-color: #0f0; }
+      50% { background-color: #6f6; }
+      100% { background-color: #0f0; }
+    }
+    .group {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: flex-start; /* left-aligned */
+      align-items: center;
+      gap: 8px;
+    }
+    strong {
+      display: block;
+      margin: 5px 0;
+    }
+
+    /* 📱 Mobile responsiveness */
+    @media (max-width: 768px) {
+      body {
+        padding: 8px;
+        font-size: 0.9em;
+      }
+
+      .header.led {
+        font-size: 1.4em;   /* smaller heading for mobile */
+        margin-bottom: 12px;
+      }
+
+      .section {
+        padding: 8px;
+        margin-bottom: 12px;
+      }
+
+      .group {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      input[type="text"],
+	  input[type="password"],
+	  input[type="number"],
+	  input[type="file"],
+	  button {
+	    width: 100%;       /* ✅ stretch full width on mobile */
+	    max-width: 100%;   /* ✅ prevents overflow */
+	    margin: 5px 0;
+	    font-size: 1em;
+	    box-sizing: border-box;
+	  }
+
+      .section h2 {
+        font-size: 1.1em;
+      }
+    }
+  </style>
+</head>
+<body>
+  <h1 class="header led">CONTROL PANEL</h1>
+
+  <div class="section" id="authSection">
+    <input id="pass" type="password" placeholder="Admin Password">
+    <button onclick="giveClickFeedback(this); authorize()">Authorize</button>
+  </div>
+
+  <div id="controls" style="display:none;">
+
+    <div class="section">
+      <h2 class="led">🖼 Team Setup</h2>
+      <div class="group">
+        <input id="teamA" type="text" placeholder="Team A Name">
+        <input id="teamB" type="text" placeholder="Team B Name">
+        <button onclick="giveClickFeedback(this); doUpdate({ teamAName: teamA.value, teamBName: teamB.value })">Update Names</button>
+      </div>
+      <div class="group">
+        <label>Logo A: <input type="file" accept="image/*" onchange="giveClickFeedback(this); uploadLogo('A', this.files[0])"></label>
+        <label>Logo B: <input type="file" accept="image/*" onchange="giveClickFeedback(this); uploadLogo('B', this.files[0])"></label>
+      </div>
+    </div>
+    
+    <div class="section">
+      <h2 class="led">🎞️ Loop Video</h2>
+      <div class="group">
+        <label>Upload: <input type="file" accept="video/mp4" onchange="giveClickFeedback(this); uploadVideo(this.files[0])"></label>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2 class="led">🎯 Scoring</h2>
+      <div class="group">
+        <strong>Team A</strong>
+        <button onclick="giveClickFeedback(this); doUpdate({ scoreA: state.scoreA + 1 })">+1</button>
+        <button onclick="giveClickFeedback(this); doUpdate({ scoreA: state.scoreA + 2 })">+2</button>
+        <button onclick="giveClickFeedback(this); doUpdate({ scoreA: state.scoreA + 3 })">+3</button>
+        <button onclick="giveClickFeedback(this); doUpdate({ scoreA: state.scoreA - 1 })">-1</button>
+        <button onclick="giveClickFeedback(this); doUpdate({ scoreA: state.scoreA - 2 })">-2</button>
+        <button onclick="giveClickFeedback(this); doUpdate({ scoreA: state.scoreA - 3 })">-3</button>
+      </div>
+      <div class="group">
+        <strong>Team B</strong>
+        <button onclick="giveClickFeedback(this); doUpdate({ scoreB: state.scoreB + 1 })">+1</button>
+        <button onclick="giveClickFeedback(this); doUpdate({ scoreB: state.scoreB + 2 })">+2</button>
+        <button onclick="giveClickFeedback(this); doUpdate({ scoreB: state.scoreB + 3 })">+3</button>
+        <button onclick="giveClickFeedback(this); doUpdate({ scoreB: state.scoreB - 1 })">-1</button>
+        <button onclick="giveClickFeedback(this); doUpdate({ scoreB: state.scoreB - 2 })">-2</button>
+        <button onclick="giveClickFeedback(this); doUpdate({ scoreB: state.scoreB - 3 })">-3</button>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2 class="led">🚨 Fouls & Period</h2>
+      <div class="group">
+        <button onclick="giveClickFeedback(this); doUpdate({ foulsA: state.foulsA + 1 })">A +Foul</button>
+        <button onclick="giveClickFeedback(this); doUpdate({ foulsA: state.foulsA - 1 })">A -Foul</button>
+        <button onclick="giveClickFeedback(this); doUpdate({ foulsB: state.foulsB + 1 })">B +Foul</button>
+        <button onclick="giveClickFeedback(this); doUpdate({ foulsB: state.foulsB - 1 })">B -Foul</button>
+        <button onclick="giveClickFeedback(this); doUpdate({ period: state.period + 1 })">+Period</button>
+        <button onclick="giveClickFeedback(this); doUpdate({ period: state.period - 1 })">-Period</button>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2 class="led">⏱ Timer Control</h2>
+      <div class="group">
+        <input id="customTime" type="number" placeholder="Time (sec)">
+        <button onclick="giveClickFeedback(this); doUpdate({ timer: parseInt(customTime.value), running: false })">Set Time</button>
+        <button onclick="giveClickFeedback(this); doUpdate({ running: true })">Start</button>
+        <button onclick="giveClickFeedback(this); doUpdate({ running: false })">Pause</button>
+        <button onclick="giveClickFeedback(this); doUpdate({ timer: 600, running: false })">Reset</button>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2 class="led">♻️ Reset</h2>
+      <div class="group">
+        <button onclick="giveClickFeedback(this); doUpdate({ scoreA:0, scoreB:0, foulsA:0, foulsB:0, timer:600, running:false, period:1 })">
+          Reset All
+        </button>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    let state = {};
+    const ws = new WebSocket(`ws://${location.host}`);
+    ws.onmessage = (e) => Object.assign(state, JSON.parse(e.data));
+
+    function authorize() {
+      const pass = document.getElementById('pass').value;
+      fetch('/api/auth', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ password: pass })
+      })
+      .then(res => {
+        if (!res.ok) throw new Error('Unauthorized');
+        return res.json();
+      })
+      .then(data => {
+        if (data.success) {
+          document.getElementById('controls').style.display = 'block';
+          document.getElementById('authSection').style.display = 'none';
+        }
+      })
+      .catch(err => { alert('Invalid password. Try again.'); console.error(err); });
+    }
+
+    function doUpdate(upd) {
+      const pass = document.getElementById('pass').value;
+      fetch('/api/update', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ password: pass, ...upd })
+      }).then(res => { if (res.status === 403) alert('Unauthorized'); });
+    }
+
+    function uploadLogo(team, file) {
+      const fd = new FormData();
+      fd.append('logo', file);
+      fd.append('team', team);
+      fd.append('password', document.getElementById('pass').value);
+
+      fetch('/api/upload-logo', {
+        method: 'POST',
+        body: fd
+      })
+      .then(res => res.json())
+      .then(json => console.log('Logo uploaded:', json.url));
+    }
+
+    function giveClickFeedback(btn) {
+      btn.classList.add('clicked');
+      setTimeout(() => btn.classList.remove('clicked'), 300);
+    }
+    
+    function uploadVideo(file) {
+      const fd = new FormData();
+      fd.append('video', file);
+      fd.append('password', document.getElementById('pass').value);
+
+      fetch('/api/upload-video', {
+        method: 'POST',
+        body: fd
+      })
+      .then(res => res.ok ? res.json() : Promise.reject('Upload failed'))
+      .then(data => {
+        alert('Loop video updated successfully!');
+        console.log('Video path:', data.path);
+      })
+      .catch(err => {
+        alert('Error uploading video');
+        console.error(err);
+      });
+    }
+  </script>
+</body>
+</html>

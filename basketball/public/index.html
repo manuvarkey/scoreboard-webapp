@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Scoreboard Display</title>
+  <link rel="stylesheet" href="led-font.css">
+  <style>
+    body {
+      background: #000;
+      color: #0f0;
+      text-align: center;
+      margin: 0;
+      padding: 20px;
+    }
+
+    .title.led {
+      font-size: 2.5em;
+      margin-bottom: 20px;
+    }
+
+    .timer.led {
+      font-size: 4em;
+      margin-bottom: 20px;
+    }
+
+    .scoreboard {
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+    }
+
+    .team-block {
+      flex: 0 1 40%;
+      margin: 10px;
+    }
+
+    .team-name.led {
+      font-size: 2.2em;
+      margin-bottom: 10px;
+    }
+
+    .score.led {
+      font-size: 6em;
+      margin: 10px 0;
+    }
+
+    .fouls-label.led {
+      font-size: 1.5em;
+      margin-top: 5px;
+    }
+
+    .team-logo {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      object-fit: cover;
+      margin-bottom: 15px;
+    }
+
+    .video-container {
+      width: 100%;
+      max-width: 400px;
+      margin: 20px auto;
+    }
+
+    .video-container video {
+      width: 100%;
+      height: auto;
+      border: 2px solid #444;
+      border-radius: 8px;
+    }
+
+    /* Digit Coloring */
+    #scoreA, #scoreB,
+    #timer, #period,
+    #foulsA, #foulsB {
+      color: #FFA500;
+    }
+  </style>
+</head>
+<body>
+  <h1 class="title led">BASKETBALL SCOREBOARD</h1>
+
+  <div class="timer led">
+    <span class="led" id="period">P1</span> | 
+    <span class="led" id="timer">--:--</span>
+  </div>
+
+  <div class="scoreboard">
+    <!-- Team A Block -->
+    <div class="team-block">
+      <img id="logoA" class="team-logo" src="" alt="-">
+      <div class="team-name led" id="teamAName">TEAM A</div>
+      <div class="score led"><span id="scoreA">0</span></div>
+      <div class="fouls-label led">FOULS: <span id="foulsA">0</span></div>
+    </div>
+
+    <!-- Looped Video -->
+    <div class="video-container">
+      <video autoplay muted loop playsinline>
+        Your browser does not support embedded video.
+      </video>
+    </div>
+
+    <!-- Team B Block -->
+    <div class="team-block">
+      <img id="logoB" class="team-logo" src="" alt="-">
+      <div class="team-name led" id="teamBName">TEAM B</div>
+      <div class="score led"><span id="scoreB">0</span></div>
+      <div class="fouls-label led">FOULS: <span id="foulsB">0</span></div>
+    </div>
+  </div>
+
+  <script>
+    const ws = new WebSocket(`ws://${location.host}`);
+    ws.onmessage = (e) => {
+      const s = JSON.parse(e.data);
+      document.getElementById('period').textContent = 'P' + s.period;
+      document.getElementById('timer').textContent =
+        `${String(Math.floor(s.timer / 60)).padStart(2, '0')}:${String(s.timer % 60).padStart(2, '0')}`;
+
+      ['teamAName', 'teamBName', 'scoreA', 'scoreB', 'foulsA', 'foulsB'].forEach(id => {
+        document.getElementById(id).textContent = s[id];
+      });
+
+      if (s.logoA) document.getElementById('logoA').src = s.logoA;
+      if (s.logoB) document.getElementById('logoB').src = s.logoB;
+
+      if (s.video) {
+        const videoEl = document.querySelector('video');
+        if (videoEl.src !== location.origin + s.video) {
+          videoEl.src = s.video;
+          videoEl.load();
+        }
+      }
+    };
+  </script>
+
+</body>
+</html>
+
