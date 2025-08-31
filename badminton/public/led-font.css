@@ -1,0 +1,6 @@
+@import url("https://db.onlinewebfonts.com/c/4f406108dd8d33639fab548b9a4dc1bc?family=LED+DOT+Matrix+Display");
+
+.led { font-family: "LED DOT Matrix Display", monospace; color: #0f0; text-shadow: 0 0 10px #0f0; }
+.team-logo { width: 120px; height: 120px; border-radius: 50%; object-fit: cover; }
+.button { font-size: 1em; margin: 4px; padding: 8px; }
+
