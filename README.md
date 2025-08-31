@@ -1,72 +1,75 @@
-## 🏀 Basketball Scoreboard Web Application  
+# 🏀🏸 Scoreboard Web Applications  
 
-This project is a **web-based scoreboard system for basketball games**, designed for community sports facilities, schools, and tournaments.  
+This repository contains **two real-time scoreboard systems**:  
+- **Basketball Scoreboard**
+- **Badminton Multi-Court Scoreboard**
 
-The system provides:  
-- A **display page** for showing the scoreboard on a big screen.  
-- A **control panel** for administrators or officials to update game details in real-time.  
+Both use a **display page** (for projection) and a **control panel** (for staff/officials), synchronized live via **WebSockets**.  
 
 ---
+
+## 🏀 Basketball Scoreboard  
 
 ### 📺 Display Page  
-- Optimized for projection on a big screen or monitor.  
-- Shows live game information, including:  
-  - **Team names**  
-  - **Scores** (highlighted in LED-style)  
-  - **Game clock** (start, pause, reset)  
-  - **Period/quarter**  
-  - **Fouls**  
-  - **Team logos** (optional)  
-  - **Looped video** between team blocks (optional for sponsor ads, animations, etc.)  
-- Designed with a **high-contrast layout** for maximum visibility.  
-- Updates automatically via WebSocket connection.  
-
----
+- Team names, scores, game clock, period, fouls  
+- Optional team logos and looped sponsor video  
+- LED-inspired high-contrast design  
 
 ### 🎛 Control Panel  
-- Provides an easy-to-use interface for officials or staff.  
-- Features include:  
-  - Update **team names**  
-  - Adjust **scores** (+1, +2, +3, or -1, -2, -3 for corrections)  
-  - Manage **fouls** and **period number**  
-  - Control the **game clock** (set custom time, start, pause, reset)  
-  - Reset the entire game state  
-  - Upload **team logos**  
-  - Upload a **loop video** for the display screen  
-- Designed for **tablet-friendly use**, with clear, touch-friendly buttons.  
-- Protected by **password-based access control**.  
+- Update team names, scores (+/-1,2,3), fouls, period  
+- Control game clock (set, start, pause, reset)  
+- Reset game state, upload team logos, upload loop video  
+- Tablet-friendly layout with password protection  
 
 ---
 
-### 🚀 Features  
-- Real-time synchronization between **control panel** and **display page** using WebSockets.  
-- **LED-inspired design** for authentic scoreboard look.  
-- **Mobile-responsive control panel** for use on tablets and phones.  
-- Customizable team branding (logos) and video loop support.  
-- Runs on a **local Node.js + Express server**, with static file serving for assets.  
-- Can be bundled into a **single Windows executable** for deployment without Node.js installation.  
+## 🏸 Badminton Scoreboard (8 Courts)  
+
+### 📺 Display Page  
+- Grid showing up to **8 courts** (configurable)  
+- Each court: player names, current score, games won  
+- LED-style design with color-coded digits  
+
+### 🎛 Control Panel  
+- Manage **1–8 active courts**  
+- Update player names, scores (+/-1), games (+/-G)  
+- Reset score only or reset entire court  
+- Reset all courts with one action  
+- Responsive layout, optimized for tablets  
 
 ---
 
-### 🏗 Tech Stack  
+## 🚀 Features (Shared)  
+- Real-time synchronization between display & control  
+- LED-inspired UI, mobile/tablet friendly  
+- Local server via **Node.js + Express + WebSockets**  
+- Packaged into a standalone **Windows executable** (`pkg`)  
+
+---
+
+## 🏗 Tech Stack  
 - **Frontend:** HTML, CSS, JavaScript  
 - **Backend:** Node.js + Express + WebSocket (WS)  
-- **File Uploads:** Multer (saves logos and loop video to `/uploads/`)  
-- **Deployment:** Local server, LAN, or packaged `.exe` (via `pkg`)  
+- **Deployment:** Local server, LAN, or packaged `.exe`  
 
 ---
 
-### ⚡ Workflow  
+## ⚡ Workflow  
 1. Officials open the **Control Panel** on a laptop/tablet.  
-2. Enter team names, upload logos/video, and set the game clock.  
-3. During the game, staff update scores, fouls, and clock via the control panel.  
-4. The **Display Page** reflects updates instantly on the facility’s screen.
-   
+2. Update player/team names, scores, and game states.  
+3. Changes sync instantly to the **Display Page**.  
+4. Display page is projected on a big screen for the audience.  
 
-## Screenshots
+---
 
-### Basketball
+## 📸 Screenshots  
 
-![Display page screenshot](https://raw.githubusercontent.com/manuvarkey/scoreboard-webapp/refs/heads/main/images/basketball_display.png)
+### Basketball  
 
-![Control page screenshot](https://raw.githubusercontent.com/manuvarkey/scoreboard-webapp/refs/heads/main/images/basketball_control.png)
+![Basketball Display](https://raw.githubusercontent.com/manuvarkey/scoreboard-webapp/refs/heads/main/images/basketball_display.png)  
+![Basketball Control](https://raw.githubusercontent.com/manuvarkey/scoreboard-webapp/refs/heads/main/images/basketball_control.png)  
+
+### Badminton  
+
+![Badminton Display](https://raw.githubusercontent.com/manuvarkey/scoreboard-webapp/refs/heads/main/images/badminton_display.png)  
+![Badminton Control](https://raw.githubusercontent.com/manuvarkey/scoreboard-webapp/refs/heads/main/images/badminton_control.png)  
